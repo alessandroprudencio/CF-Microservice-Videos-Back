@@ -32,7 +32,7 @@ Pronto sua aplicação estará rodando no endereço http://localhost:8000
 Rodar migrations e Seeds
 
 ```
- docker exec -it micro-videos-app bash
+docker exec -it micro-videos-app bash
 ```
 
 ```
