@@ -29,6 +29,16 @@ docker-compose up -d
 
 Pronto sua aplicação estará rodando no endereço http://localhost:8000
 
+Rodar migrations e Seeds
+
+```
+ docker exec -it micro-videos-app bash
+```
+
+```
+php artisan migrate:refresh --seed
+```
+
 ### Documentação
 
 http://localhost:8000/api/documentation
