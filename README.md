@@ -31,10 +31,14 @@ Pronto sua aplicação estará rodando no endereço http://localhost:8000
 
 ### Documentação
 
-```
 http://localhost:8000/api/documentation
-```
 
+
+### Atualizar documentação da api
+
+```
+php artisan l5-swagger:generate
+```
 
 ## Construído com
 

@@ -33,7 +33,6 @@ class StoreCategoryRequest
      * @var string
      */
     public $description;
-
     
     /**
      * @OA\Property(
