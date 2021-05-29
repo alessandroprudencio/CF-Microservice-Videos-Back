@@ -16,7 +16,7 @@ Docker Compose
 ### Instalação
 
 ```
-git clone https://github.com/alessandroprudencio/CF-Microservice-Videos-Back.git
+git clone git@github.com:alessandroprudencio/CF-Microservice-Videos-Back.git
 ```
 
 ```
