@@ -44,7 +44,7 @@ php artisan migrate:refresh --seed
 http://localhost:8000/api/documentation
 
 
-### Atualizar documentação da api
+### Atualizar documentação
 
 ```
 php artisan l5-swagger:generate
