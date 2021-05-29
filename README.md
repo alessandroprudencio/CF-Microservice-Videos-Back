@@ -50,6 +50,12 @@ http://localhost:8000/api/documentation
 php artisan l5-swagger:generate
 ```
 
+### Testes
+
+```
+php artisan test
+```
+
 ## Construído com
 
 * [Laravel](https://laravel.com/)
