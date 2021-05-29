@@ -13,7 +13,7 @@ class CategoryTest extends TestCase
 
     public function test_list()
     {
-        Category::factory()->count(1)->create();
+        Category::factory()->create();
 
         $categories = Category::all();
 
@@ -93,5 +93,19 @@ class CategoryTest extends TestCase
         foreach ($updatedData as $key => $value) {
             $this->assertEquals($value, $category->{$key});
         }
+    }
+
+    public function test_delete(){
+
+        $category = Category::factory()->create();
+
+        $category->delete();
+
+        $this->assertNull(Category::find($category->id));
+
+        $category->restore();
+
+        $this->assertNotNull(Category::find($category->id));
+
     }
 }
