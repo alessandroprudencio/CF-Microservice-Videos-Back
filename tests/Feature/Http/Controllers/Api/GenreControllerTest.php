@@ -97,6 +97,17 @@ class GenreControllerTest extends TestCase
             ]);
     }
 
+    public function test_destroy()
+    {
+        $genre = Genre::factory()->create();
+        $response = $this->deleteJson(route('genres.destroy', $genre->id));
+
+        $response->assertStatus(204);
+
+        $this->assertNull(Genre::find($genre->id));
+        $this->assertNotNull(Genre::withTrashed()->find($genre->id));
+    }
+
     protected function assertInvalidationRequired($response){
         $response
             ->assertStatus(422)
