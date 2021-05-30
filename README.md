@@ -53,7 +53,7 @@ php artisan l5-swagger:generate
 ### Testes
 
 ```
-php artisan test
+php artisan test ou ./vendor/bin/phpunit
 ```
 
 ## Construído com

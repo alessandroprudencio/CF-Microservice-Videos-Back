@@ -7,10 +7,6 @@ use \Ramsey\Uuid\Uuid as RamseyUuid;
 trait Uuid {
     protected static function booted()
     {
-        static::creating(function ($model) {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->id = RamseyUuid::uuid4()->toString();
-            }
-        });
+        static::creating(fn ($model) => $model->id = (string) RamseyUuid::uuid4());
     }
 }
