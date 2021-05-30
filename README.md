@@ -1,6 +1,6 @@
 # CF-Microservice-Videos-Back
 
-Microsserviço - Backend do catálogo de vídeos com Laravel
+Microsserviço - Backend do catálogo de vídeos com Laravel da CodeFlix
 
 ### Arquitetura e requisitos do projeto 
 
