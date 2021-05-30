@@ -2,6 +2,10 @@
 
 Microsserviço - Backend do catálogo de vídeos com Laravel
 
+### Arquitetura e requisitos do projeto 
+
+[Documentação completa aqui.](https://github.com/alessandroprudencio/CodeFlix)
+
 ### Pré-requisitos
 
 O que você precisa para instalar o software
