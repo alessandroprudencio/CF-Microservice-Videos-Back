@@ -15,7 +15,7 @@ class Genre extends Model
 
     public $incrementing = false;
 
-    protected $fillable = [ 'name', 'is_active' ];
+    protected $fillable = ['name', 'is_active'];
 
     protected $dates =  ['deleted_at'];
 
@@ -25,8 +25,9 @@ class Genre extends Model
     ];
 
     protected $attributes = [
-        'is_active' => true
-     ];
+        'is_active' => true,
+        'deleted_at' => null
+    ];
 
     protected $keyType = 'string';
 }
