@@ -2,7 +2,7 @@
 
 Microsserviço - Backend do catálogo de vídeos com Laravel da CodeFlix
 
-### Arquitetura e requisitos do projeto 
+### Arquitetura e requisitos do projeto
 
 [Documentação completa aqui.](https://github.com/alessandroprudencio/CodeFlix)
 
@@ -13,6 +13,7 @@ O que você precisa para instalar o software
 ```
 Docker
 ```
+
 ```
 Docker Compose
 ```
@@ -43,17 +44,6 @@ docker exec -it micro-videos-app bash
 php artisan migrate:refresh --seed
 ```
 
-### Documentação
-
-http://localhost:8000/api/documentation
-
-
-### Atualizar documentação
-
-```
-php artisan l5-swagger:generate
-```
-
 ### Testes
 
 ```
@@ -62,7 +52,7 @@ php artisan test ou ./vendor/bin/phpunit
 
 ## Construído com
 
-* [Laravel](https://laravel.com/)
+-   [Laravel](https://laravel.com/)
 
 ## Contribuição
 
@@ -74,9 +64,7 @@ Abra um Pull Request
 
 ## Author
 
-* Alessandro Prudencio
-* alessandroconectado@gmail.com
-* +55 (67) 99269-6705
-* [Linkedin](https://www.linkedin.com/in/alessandro-prudencio/)
-
-
+-   Alessandro Prudencio
+-   alessandroconectado@gmail.com
+-   +55 (67) 99269-6705
+-   [Linkedin](https://www.linkedin.com/in/alessandro-prudencio/)
