@@ -88,8 +88,6 @@ class GenreControllerTest extends TestCase
 
     public function test_update()
     {
-        $this->category = Genre::factory()->create($this->data);
-
         $this->assertUpdate($this->newData, array_merge($this->newData, ['is_active' => false]));
 
         $this->assertUpdate($this->data, $this->data);

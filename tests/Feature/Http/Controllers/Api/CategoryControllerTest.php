@@ -89,8 +89,6 @@ class CategoryControllerTest extends TestCase
 
     public function test_update()
     {
-        // $this->category = Category::factory()->create();
-
         $this->assertUpdate($this->newData, $this->newData + ['description' => 'new description']);
 
         $this->assertUpdate($this->data, array_merge($this->data, ['description' => null]));

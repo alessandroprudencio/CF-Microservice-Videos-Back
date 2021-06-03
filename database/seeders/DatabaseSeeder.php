@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Category;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,5 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(CategoriesSeeder::class);
         $this->call(GenresSeeder::class);
+        $this->call(CastMembersSeeder::class);
     }
 }
