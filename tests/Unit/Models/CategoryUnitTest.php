@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class CategoryTest extends TestCase
+class CategoryUnitTest extends TestCase
 {
     private $category;
 
-    protected function setup():void
+    protected function setup(): void
     {
         parent::setup();
         $this->category = new Category();
@@ -20,12 +20,12 @@ class CategoryTest extends TestCase
 
     public function test_fillable_attribute()
     {
-        $this->assertEquals([ 'name', 'description', 'is_active' ],  $this->category->getFillable() );
+        $this->assertEquals(['name', 'description', 'is_active'],  $this->category->getFillable());
     }
 
     public function test_incrementing_attribute()
     {
-        $this->assertFalse( $this->category->getIncrementing());
+        $this->assertFalse($this->category->getIncrementing());
     }
 
     public function test_keytype_attribute()
@@ -37,21 +37,21 @@ class CategoryTest extends TestCase
     {
         $dates =  ['deleted_at', 'created_at', 'updated_at'];
 
-        $this->assertEquals($dates ,  $this->category->getDates());
+        $this->assertEquals($dates,  $this->category->getDates());
 
         $this->assertCount(count($dates),  $this->category->getDates());
     }
 
     public function test_if_use_traits()
     {
-       $traits =  [
-           SoftDeletes::class,
-           HasFactory::class,
-           Uuid::class,
-       ];
+        $traits =  [
+            SoftDeletes::class,
+            HasFactory::class,
+            Uuid::class,
+        ];
 
-       $categoryTraits = array_keys(class_uses(Category::class));
+        $categoryTraits = array_keys(class_uses(Category::class));
 
-       $this->assertEquals($traits, $categoryTraits);
+        $this->assertEquals($traits, $categoryTraits);
     }
 }

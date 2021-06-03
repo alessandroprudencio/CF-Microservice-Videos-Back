@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
 
-class GenreTest extends TestCase
+class GenreUnitTest extends TestCase
 {
     private $genre;
 
-    protected function setup():void
+    protected function setup(): void
     {
         parent::setup();
         $this->genre = new Genre();
@@ -20,8 +20,7 @@ class GenreTest extends TestCase
 
     public function test_fillable_attribute()
     {
-        $this->assertEquals([ 'name', 'is_active' ], $this->genre->getFillable() );
-
+        $this->assertEquals(['name', 'is_active'], $this->genre->getFillable());
     }
 
     public function test_incrementing_attribute()
@@ -38,21 +37,21 @@ class GenreTest extends TestCase
     {
         $dates =  ['deleted_at', 'created_at', 'updated_at'];
 
-        $this->assertEquals($dates , $this->genre->getDates());
+        $this->assertEquals($dates, $this->genre->getDates());
 
         $this->assertCount(count($dates), $this->genre->getDates());
     }
 
     public function test_if_use_traits()
     {
-       $traits =  [
-           SoftDeletes::class,
-           HasFactory::class,
-           Uuid::class,
-       ];
+        $traits =  [
+            SoftDeletes::class,
+            HasFactory::class,
+            Uuid::class,
+        ];
 
-       $categoryTraits = array_keys(class_uses(Genre::class));
+        $categoryTraits = array_keys(class_uses(Genre::class));
 
-       $this->assertEquals($traits, $categoryTraits);
+        $this->assertEquals($traits, $categoryTraits);
     }
 }
