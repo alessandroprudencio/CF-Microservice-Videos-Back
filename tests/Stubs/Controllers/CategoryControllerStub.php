@@ -8,6 +8,11 @@ use Tests\Stubs\Models\CategoryStub;
 
 class CategoryControllerStub extends BasicCrudController
 {
+    protected $rules = [
+        'name' => 'required|max:255',
+        'description' => 'nullable',
+    ];
+
     protected function model()
     {
         return CategoryStub::class;
@@ -15,9 +20,11 @@ class CategoryControllerStub extends BasicCrudController
 
     protected function rulesStore()
     {
-        return  [
-            'name' => 'required|max:255',
-            'description' => 'nullable'
-        ];
+        return  $this->rules;
+    }
+
+    protected function rulesUpdate()
+    {
+        return  $this->rules;
     }
 }
