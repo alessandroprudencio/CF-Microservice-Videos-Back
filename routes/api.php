@@ -11,4 +11,5 @@ Route::namespace('App\Http\Controllers\Api')->group(function () {
     Route::apiResource('categories', 'CategoryController');
     Route::apiResource('genres', 'GenreController');
     Route::apiResource('cast_members', 'CastMemberController');
+    Route::apiResource('videos', 'VideoController');
 });
