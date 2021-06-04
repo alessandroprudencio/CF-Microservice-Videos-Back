@@ -6,19 +6,28 @@ use Tests\TestCase;
 use App\Models\Video;
 use Tests\Traits\TestValidations;
 use Tests\Traits\TestSaves;
+use App\Http\Controllers\Api\VideoController;
+use Illuminate\Http\Request;
+use Tests\Exceptions\TestException;
+use App\Models\Category;
+use App\Models\Genre;
 
 class VideoControllerTest extends TestCase
 {
     use TestValidations, TestSaves;
 
     private $data;
-    private $newData;
+
     private $video;
 
-    protected function setUp(): void
+    public function setUp(): void
     {
         parent::setUp();
-        $this->video = Video::factory()->create();
+
+        $this->video = Video::factory()->create([
+            'opened' => false
+        ]);
+
         $this->data = [
             'title' => "Homen da lua",
             'description' => "HISTORIA DE UM HOMEM NA LUA",
@@ -26,13 +35,36 @@ class VideoControllerTest extends TestCase
             'duration' => 30,
             'year_launched' => 2020,
         ];
-        $this->newData = [
-            'title' => "Homen da lua 2",
-            'description' => "HISTORIA DE UM HOMEM NA LUA 2",
-            'rating' => Video::RATING_LIST[1],
-            'duration' => 30,
-            'year_launched' => 2022,
-        ];
+    }
+
+    public function test_rollback_store()
+    {
+        $controller = $this->instance(VideoController::class, \Mockery::mock(VideoController::class))
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
+            ->shouldReceive('validate')
+            ->withAnyArgs()
+            ->andReturn($this->data);
+
+        $controller
+            ->shouldReceive('rulesStore')
+            ->withAnyArgs()
+            ->andReturn([]);
+
+        $controller
+            ->shouldReceive('handleRelations')
+            ->once()
+            ->andThrow(new TestException());
+
+        $request = $this->instance(Request::class, \Mockery::mock(Request::class));
+
+        try {
+            $controller->store($request);
+        } catch (TestException $exception) {
+            $this->assertCount(1, Video::all());
+        }
     }
 
     public function test_index()
@@ -60,7 +92,9 @@ class VideoControllerTest extends TestCase
             'description' => '',
             'year_launched' => '',
             'rating' => '',
-            'duration' => ''
+            'duration' => '',
+            'categories_id' => '',
+            'genres_id' => ''
         ];
 
         $errors = [
@@ -69,6 +103,8 @@ class VideoControllerTest extends TestCase
             'errors.year_launched' => 'array',
             'errors.rating' => 'array',
             'errors.duration' => 'array',
+            'errors.categories_id' => 'array',
+            'errors.genres_id' => 'array',
         ];
 
         $this->assertInvalidationInStoreAction($data, $errors);
@@ -145,20 +181,57 @@ class VideoControllerTest extends TestCase
         $this->assertInvalidationInUpdateAction($data, $errors);
     }
 
+    public function test_invalidation_categories_id_field()
+    {
+        $this->test_invalidation_categories_genres_ids('categories_id');
+    }
+
+    public function test_invalidation_genres_id_field()
+    {
+        $this->test_invalidation_categories_genres_ids('genres_id');
+    }
+
+    private function test_invalidation_categories_genres_ids($field)
+    {
+        $data = [
+            $field => 'a'
+        ];
+
+        $errors = [
+            'errors.' . $field => 'array',
+        ];
+
+        $this->assertInvalidationInStoreAction($data, $errors);
+        $this->assertInvalidationInUpdateAction($data, $errors);
+
+        $data = [
+            $field => [100]
+        ];
+
+        $errors = [
+            'errors.' . $field => 'array',
+        ];
+
+        $this->assertInvalidationInStoreAction($data, $errors);
+        $this->assertInvalidationInUpdateAction($data, $errors);
+    }
 
     public function test_save()
     {
+        $category = Category::factory()->create();
+        $genre = Genre::factory()->create();
+
         $data = [
             [
-                'send_data' => $this->data,
+                'send_data' => $this->data + ['categories_id' => [$category->id], 'genres_id' => [$genre->id]],
                 'test_data' => $this->data + ['opened' => false],
             ],
             [
-                'send_data' => $this->data + ['opened' => true],
+                'send_data' => $this->data + ['opened' => true, 'categories_id' => [$category->id], 'genres_id' => [$genre->id]],
                 'test_data' => $this->data + ['opened' => true],
             ],
             [
-                'send_data' => $this->data + ['rating' => Video::RATING_LIST[1]],
+                'send_data' => $this->data + ['rating' => Video::RATING_LIST[1], 'categories_id' => [$category->id], 'genres_id' => [$genre->id]],
                 'test_data' => $this->data + ['rating' => Video::RATING_LIST[1]],
             ]
         ];

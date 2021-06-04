@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\Uuid;
+use App\Models\Category;
 
 class Genre extends Model
 {
@@ -30,4 +31,9 @@ class Genre extends Model
     ];
 
     protected $keyType = 'string';
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }
