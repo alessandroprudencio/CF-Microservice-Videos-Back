@@ -9,6 +9,7 @@ use Tests\Traits\TestValidations;
 use Tests\Traits\TestSaves;
 use Illuminate\Http\Request;
 use Tests\Exceptions\TestException;
+use App\Http\Controllers\Api\GenreController;
 
 class GenreControllerTest extends TestCase
 {
@@ -35,38 +36,38 @@ class GenreControllerTest extends TestCase
         ];
     }
 
-    // public function test_rollback_store()
-    // {
-    //     $controller = $this->instance(GenreController::class, \Mockery::mock(GenreController::class))
-    //         ->makePartial()
-    //         ->shouldAllowMockingProtectedMethods();
+    public function test_rollback_store()
+    {
+        $controller = $this->instance(GenreController::class, \Mockery::mock(GenreController::class))
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-    //     $controller
-    //         ->shouldReceive('validate')
-    //         ->withAnyArgs()
-    //         ->andReturn($this->data);
+        $controller
+            ->shouldReceive('validate')
+            ->withAnyArgs()
+            ->andReturn($this->data);
 
-    //     $controller
-    //         ->shouldReceive('rulesStore')
-    //         ->withAnyArgs()
-    //         ->andReturn([]);
+        $controller
+            ->shouldReceive('rulesStore')
+            ->withAnyArgs()
+            ->andReturn([]);
 
-    //     $controller
-    //         ->shouldReceive('handleRelations')
-    //         ->once()
-    //         ->andThrow(new TestException());
+        $controller
+            ->shouldReceive('handleRelations')
+            ->once()
+            ->andThrow(new TestException());
 
-    //     $request = $this->instance(Request::class, \Mockery::mock(Request::class));
+        $request = $this->instance(Request::class, \Mockery::mock(Request::class));
 
-    //     $hasError= false;
-    //     try {
-    //         $controller->store($request);
-    //     } catch (TestException $exception) {
-    //         $this->assertCount(1, Genre::all());
-    //         $hasError = true;
-    //     }
-    //     $this->assertTrue($hasError);
-    // }
+        $hasError = false;
+        try {
+            $controller->store($request);
+        } catch (TestException $exception) {
+            $this->assertCount(1, Genre::all());
+            $hasError = true;
+        }
+        $this->assertTrue($hasError);
+    }
 
     public function test_index()
     {
@@ -148,61 +149,73 @@ class GenreControllerTest extends TestCase
         );
     }
 
-    // public function test_sync_categories()
-    // {
-    //     $categoriesId = Category::factory()->count(3)->create()->pluck('id')->toArray();
+    public function test_sync_categories()
+    {
+        $categoriesId = Category::factory()->count(3)->create()->pluck('id')->toArray();
 
-    //     $sendData = [
-    //         'name' => 'test',
-    //         'categories_id' => [$categoriesId[0]]
-    //     ];
+        $sendData = [
+            'name' => 'test',
+            'categories_id' => [$categoriesId[0]]
+        ];
 
-    //     $response = $this->postJson($this->routeStore(), $sendData);
+        $response =  $this->postJson($this->routeStore(), $sendData);
 
-    //     $this->assertDatabaseHas('category_genre', [
-    //         'category_id' => $categoriesId[0],
-    //         'genre_id' => $response->json('id')
-    //     ]);
-    // }
+        $this->assertDatabaseHas('category_genre', [
+            'genre_id' => $response->json('id'),
+            'category_id' => $categoriesId[0],
+        ]);
 
-    // public function test_store()
-    // {
-    //     $category = Category::factory()->create();
+        $sendData = [
+            'name' => 'test',
+            'categories_id' => [$categoriesId[1], $categoriesId[2]]
+        ];
 
-    //     $response = $this->assertStore(
-    //         $this->data + ['categories_id' => [$category->id]],
-    //         $this->data + ['is_active' => true, 'deleted_at' => null]
-    //     );
+        $response = $this->putJson($this->routeUpdate(), $sendData);
 
-    //     $response->assertJsonStructure(
-    //         [
-    //             'created_at',
-    //             'updated_at'
-    //         ]
-    //     );
-    // }
+        $this->assertDatabaseHas('category_genre', [
+            'genre_id' => $response->json('id'),
+            'category_id' => $categoriesId[1]
+        ]);
+    }
 
-    // public function test_update()
-    // {
-    //     $categoryId = Category::factory()->create()->id;
+    public function test_store()
+    {
+        $category = Category::factory()->create();
 
-    //     $data = [
-    //         'name' => 'test',
-    //         'is_active' => true
-    //     ];
+        $response = $this->assertStore(
+            $this->data + ['categories_id' => [$category->id]],
+            $this->data + ['is_active' => true, 'deleted_at' => null]
+        );
 
-    //     $response = $this->assertUpdate(
-    //         $data + ['categories_id' => [$categoryId]],
-    //         $data + ['deleted_at' => null]
-    //     );
+        $response->assertJsonStructure(
+            [
+                'created_at',
+                'updated_at'
+            ]
+        );
+    }
 
-    //     $response->assertJsonStructure(
-    //         [
-    //             'created_at',
-    //             'updated_at'
-    //         ]
-    //     );
-    // }
+    public function test_update()
+    {
+        $categoryId = Category::factory()->create()->id;
+
+        $data = [
+            'name' => 'test',
+            'is_active' => true
+        ];
+
+        $response = $this->assertUpdate(
+            $data + ['categories_id' => [$categoryId]],
+            $data + ['deleted_at' => null]
+        );
+
+        $response->assertJsonStructure(
+            [
+                'created_at',
+                'updated_at'
+            ]
+        );
+    }
 
     public function test_destroy()
     {
