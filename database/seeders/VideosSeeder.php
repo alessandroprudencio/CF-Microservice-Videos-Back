@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Video;
+use App\Models\Genre;
 
 class VideosSeeder extends Seeder
 {
@@ -14,6 +15,16 @@ class VideosSeeder extends Seeder
      */
     public function run()
     {
-        Video::factory()->count(100)->create();
+        $genres = Genre::all();
+        Video::factory()->count(100)->create()->each(function (Video $video) use ($genres) {
+            $subGenres = $genres->random(5)->load('categories');
+            $categoriesId = [];
+            foreach ($subGenres as $genre) {
+                array_push($categoriesId, ...$genre->categories->pluck('id')->toArray());
+            }
+            $categoriesId = array_unique($categoriesId);
+            $video->categories()->attach($categoriesId);
+            $video->genres()->attach($subGenres->pluck('id')->toArray());
+        });
     }
 }
