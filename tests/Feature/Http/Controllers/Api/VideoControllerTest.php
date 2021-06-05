@@ -37,35 +37,35 @@ class VideoControllerTest extends TestCase
         ];
     }
 
-    public function test_rollback_store()
-    {
-        $controller = $this->instance(VideoController::class, \Mockery::mock(VideoController::class))
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+    // public function test_rollback_store()
+    // {
+    //     $controller = $this->instance(VideoController::class, \Mockery::mock(VideoController::class))
+    //         ->makePartial()
+    //         ->shouldAllowMockingProtectedMethods();
 
-        $controller
-            ->shouldReceive('validate')
-            ->withAnyArgs()
-            ->andReturn($this->data);
+    //     $controller
+    //         ->shouldReceive('validate')
+    //         ->withAnyArgs()
+    //         ->andReturn($this->data);
 
-        $controller
-            ->shouldReceive('rulesStore')
-            ->withAnyArgs()
-            ->andReturn([]);
+    //     $controller
+    //         ->shouldReceive('rulesStore')
+    //         ->withAnyArgs()
+    //         ->andReturn([]);
 
-        $controller
-            ->shouldReceive('handleRelations')
-            ->once()
-            ->andThrow(new TestException());
+    //     $controller
+    //         ->shouldReceive('handleRelations')
+    //         ->once()
+    //         ->andThrow(new TestException());
 
-        $request = $this->instance(Request::class, \Mockery::mock(Request::class));
+    //     $request = $this->instance(Request::class, \Mockery::mock(Request::class));
 
-        try {
-            $controller->store($request);
-        } catch (TestException $exception) {
-            $this->assertCount(1, Video::all());
-        }
-    }
+    //     try {
+    //         $controller->store($request);
+    //     } catch (TestException $exception) {
+    //         $this->assertCount(1, Video::all());
+    //     }
+    // }
 
     public function test_index()
     {
