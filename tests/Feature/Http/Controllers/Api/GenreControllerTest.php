@@ -9,11 +9,12 @@ use Tests\Traits\TestValidations;
 use Tests\Traits\TestSaves;
 use Illuminate\Http\Request;
 use Tests\Exceptions\TestException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Http\Controllers\Api\GenreController;
 
 class GenreControllerTest extends TestCase
 {
-    use TestValidations, TestSaves;
+    use TestValidations, TestSaves, RefreshDatabase;
 
     private $data;
 

@@ -3,7 +3,6 @@
 namespace Tests\Feature\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Genre;
 
@@ -59,15 +58,16 @@ class GenreTest extends TestCase
         $this->assertTrue($genre->is_active);
     }
 
-    public function test_edit(){
+    public function test_edit()
+    {
         $data = [
             'name' => 'test',
-            'is_active'=> true
+            'is_active' => true
         ];
 
         $updatedData = [
             'name' => 'test_update',
-            'is_active'=> false
+            'is_active' => false
         ];
 
         $genre = Genre::create($data);
@@ -79,7 +79,8 @@ class GenreTest extends TestCase
         }
     }
 
-    public function test_delete(){
+    public function test_delete()
+    {
 
         $genre = Genre::factory()->create();
 
@@ -90,6 +91,5 @@ class GenreTest extends TestCase
         $genre->restore();
 
         $this->assertNotNull(Genre::find($genre->id));
-
     }
 }

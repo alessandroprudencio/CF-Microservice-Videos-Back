@@ -13,7 +13,6 @@ use App\Http\Controllers\Api\BasicCrudController;
 
 class BasicCrudControllerTest extends TestCase
 {
-
     private $controller;
 
     protected function setUp(): void

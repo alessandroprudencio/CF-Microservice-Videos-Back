@@ -10,11 +10,11 @@ use Tests\Traits\TestUploads;
 use App\Models\Category;
 use App\Models\Genre;
 use Illuminate\Http\UploadedFile;
-use Storage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class VideoControllerTest extends TestCase
 {
-    use TestValidations, TestSaves, TestUploads;
+    use TestValidations, TestSaves, TestUploads, RefreshDatabase;
 
     private $data;
 

@@ -6,10 +6,11 @@ use Tests\TestCase;
 use App\Models\Category;
 use Tests\Traits\TestValidations;
 use Tests\Traits\TestSaves;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CategoryControllerTest extends TestCase
 {
-    use TestValidations, TestSaves;
+    use TestValidations, TestSaves, RefreshDatabase;
 
     protected $data = [
         'name' => 'test controller',

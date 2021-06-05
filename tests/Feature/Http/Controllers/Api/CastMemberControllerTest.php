@@ -6,10 +6,11 @@ use Tests\TestCase;
 use App\Models\CastMember;
 use Tests\Traits\TestValidations;
 use Tests\Traits\TestSaves;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CastMemberControllerTest extends TestCase
 {
-    use TestValidations, TestSaves;
+    use TestValidations, TestSaves, RefreshDatabase;
 
     protected $data = [
         'name' => 'test controller',

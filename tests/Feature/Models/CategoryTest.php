@@ -3,7 +3,6 @@
 namespace Tests\Feature\Models;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Category;
 
@@ -73,17 +72,18 @@ class CategoryTest extends TestCase
         $this->assertTrue($category->is_active);
     }
 
-    public function test_edit(){
+    public function test_edit()
+    {
         $data = [
             'name' => 'test',
             'description' => 'description',
-            'is_active'=> true
+            'is_active' => true
         ];
 
         $updatedData = [
             'name' => 'test_update',
             'description' => 'description_update',
-            'is_active'=> false
+            'is_active' => false
         ];
 
         $category = Category::create($data);
@@ -95,7 +95,8 @@ class CategoryTest extends TestCase
         }
     }
 
-    public function test_delete(){
+    public function test_delete()
+    {
 
         $category = Category::factory()->create();
 
@@ -106,6 +107,5 @@ class CategoryTest extends TestCase
         $category->restore();
 
         $this->assertNotNull(Category::find($category->id));
-
     }
 }
