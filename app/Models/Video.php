@@ -21,7 +21,7 @@ class Video extends Model
 
     public $incrementing = false;
 
-    public static $fileFields = ['video_file'];
+    public static $fileFields = ['video_file', 'thumb_file'];
 
     protected $fillable = [
         'name',
@@ -30,7 +30,9 @@ class Video extends Model
         'year_launched',
         'opened',
         'rating',
-        'duration'
+        'duration',
+        'video_file',
+        'thumb_file'
     ];
 
     protected $dates =  ['deleted_at'];
@@ -61,7 +63,7 @@ class Video extends Model
             return $obj;
         } catch (\Exception $exception) {
             if (isset($obj)) {
-                //excluir os arquivos
+                $obj->deleteFiles($files);
             }
             \DB::rollback();
             throw $exception;

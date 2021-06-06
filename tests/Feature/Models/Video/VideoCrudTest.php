@@ -9,6 +9,16 @@ use Illuminate\Database\QueryException;
 
 class VideoCrudTest extends BaseVideoTestCase
 {
+    private $fileFieldsData = [];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        foreach (Video::$fileFields as $field) {
+            $this->fileFieldsData[$field] = "$field.test";
+        }
+    }
+
     public function test_list()
     {
         Video::factory()->create();
@@ -29,6 +39,7 @@ class VideoCrudTest extends BaseVideoTestCase
                 'rating',
                 'duration',
                 'video_file',
+                'thumb_file',
                 'created_at',
                 'updated_at',
                 'deleted_at'
@@ -39,7 +50,7 @@ class VideoCrudTest extends BaseVideoTestCase
 
     public function test_create_with_basic_fields()
     {
-        $video = Video::factory()->create($this->data);
+        $video = Video::create($this->data + $this->fileFieldsData);
 
         $video->refresh();
 
@@ -47,7 +58,7 @@ class VideoCrudTest extends BaseVideoTestCase
 
         $this->assertFalse($video->opened);
 
-        $this->assertDatabaseHas('videos', $this->data + ['opened' => false]);
+        $this->assertDatabaseHas('videos', $this->data + $this->fileFieldsData + ['opened' => false]);
 
         $video = Video::create($this->data + ['opened' => true]);
 
@@ -76,7 +87,7 @@ class VideoCrudTest extends BaseVideoTestCase
     {
         $video = Video::factory()->create(['opened' => false]);
 
-        $video->update($this->data);
+        $video->update($this->data + $this->fileFieldsData);
 
         $this->assertFalse($video->opened);
 
@@ -84,7 +95,7 @@ class VideoCrudTest extends BaseVideoTestCase
 
         $video = Video::factory()->create(['opened' => true]);
 
-        $video->update($this->data + ['opened' => true]);
+        $video->update($this->data + $this->fileFieldsData + ['opened' => true]);
 
         $this->assertTrue($video->opened);
 
