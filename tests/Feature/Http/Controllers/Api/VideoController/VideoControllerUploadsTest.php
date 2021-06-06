@@ -9,6 +9,7 @@ use Illuminate\Http\UploadedFile;
 use App\Models\Category;
 use App\Models\Genre;
 use App\Models\Video;
+use Illuminate\Support\Facades\Storage;
 
 class VideoControllerUploadsTest extends BaseVideoControllerTestCase
 {
@@ -84,7 +85,9 @@ class VideoControllerUploadsTest extends BaseVideoControllerTestCase
 
     public function test_store_with_files()
     {
-        \Storage::fake();
+        UploadedFile::fake()->image('image.jpg');
+
+        Storage::fake();
 
         $files = $this->getFiles();
 
