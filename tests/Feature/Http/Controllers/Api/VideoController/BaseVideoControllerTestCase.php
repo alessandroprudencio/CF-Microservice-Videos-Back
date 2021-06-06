@@ -1,17 +1,27 @@
 <?php
 
-namespace Tests\Feature\Models\Video;
+namespace Tests\Feature\Http\Controllers\Api\VideoController;
 
+use Tests\TestCase;
 use App\Models\Video;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-abstract class BasicVideoTestCase extends TestCase
+abstract class BaseVideoControllerTestCase extends TestCase
 {
+    use RefreshDatabase;
+
     protected $data;
+
+    protected $video;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->video = Video::factory()->create([
+            'opened' => false
+        ]);
+
         $this->data = [
             'title' => "Homen da lua",
             'description' => "HISTORIA DE UM HOMEM NA LUA",

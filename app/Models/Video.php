@@ -43,7 +43,7 @@ class Video extends Model
     ];
 
     protected $attributes = [
-        'opened' => false,
+        // 'opened' => false,
         'deleted_at' => null
     ];
 
