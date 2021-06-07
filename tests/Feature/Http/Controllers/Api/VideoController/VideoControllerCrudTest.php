@@ -5,14 +5,53 @@ namespace Tests\Feature\Http\Controllers\Api\VideoController;
 use App\Models\Video;
 use Tests\Traits\TestValidations;
 use Tests\Traits\TestSaves;
+use Tests\Traits\TestResources;
 use Tests\Traits\TestUploads;
-use App\Models\Category;
-use App\Models\Genre;
-use Illuminate\Http\UploadedFile;
+use Arr;
+use App\Http\Resources\VideoResource;
 
 class VideoCrudTest extends BaseVideoControllerTestCase
 {
-    use TestValidations, TestSaves, TestUploads;
+    use TestValidations, TestSaves, TestUploads, TestResources;
+
+    private $fieldsSerialized = [
+        'id',
+        'title',
+        'description',
+        'year_launched',
+        'rating',
+        'duration',
+        'rating',
+        'opened',
+        'thumb_file_url',
+        'banner_file_url',
+        'video_file_url',
+        'trailer_file_url',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'categories' => [
+            '*' => [
+                'id',
+                'name',
+                'description',
+                'is_active',
+                'created_at',
+                'updated_at',
+                'deleted_at'
+            ]
+        ],
+        'genres' => [
+            '*' => [
+                'id',
+                'name',
+                'is_active',
+                'created_at',
+                'updated_at',
+                'deleted_at',
+            ]
+        ]
+    ];
 
     public function test_index()
     {
@@ -20,16 +59,39 @@ class VideoCrudTest extends BaseVideoControllerTestCase
 
         $response
             ->assertStatus(200)
-            ->assertJson([$this->video->toArray()]);
+            ->assertJsonStructure(
+                [
+                    'data' => [
+                        '*' => $this->fieldsSerialized
+                    ],
+                    'meta' => [],
+                    'links' => []
+                ]
+            );
+        $this->assertResource($response, VideoResource::collection(collect([$this->video])));
+
+        $this->assertIfFilesUrlExists($this->video, $response);
     }
 
     public function test_show()
     {
-        $response = $this->getJson(route('videos.show', $this->video->id));
+        $response = $this->json(
+            'GET',
+            route('videos.show', ['video' => $this->video->id])
+        );
 
         $response
             ->assertStatus(200)
-            ->assertJson($this->video->toArray());
+            ->assertJsonStructure([
+                'data' => $this->fieldsSerialized
+            ]);
+
+        $this->assertResource(
+            $response,
+            new VideoResource(Video::find($response->json('data.id')))
+        );
+
+        $this->assertIfFilesUrlExists($this->video, $response);
     }
 
     public function test_invalidation_required()
@@ -163,24 +225,27 @@ class VideoCrudTest extends BaseVideoControllerTestCase
         $this->assertInvalidationInUpdateAction($data, $errors);
     }
 
-    public function test_save()
+    public function test_save_without_files()
     {
-        $category = Category::factory()->create();
-        $genre = Genre::factory()->create();
+        $testData = Arr::except($this->data, ['categories_id', 'genres_id']);
 
         $data = [
             [
-                'send_data' => $this->data + ['categories_id' => [$category->id], 'genres_id' => [$genre->id]],
-                'test_data' => $this->data + ['opened' => false],
+                'send_data' => $this->data,
+                'test_data' => $testData + ['opened' => false]
             ],
             [
-                'send_data' => $this->data + ['opened' => true, 'categories_id' => [$category->id], 'genres_id' => [$genre->id]],
-                'test_data' => $this->data + ['opened' => true],
+                'send_data' => $this->data + [
+                    'opened' => true,
+                ],
+                'test_data' => $testData + ['opened' => true]
             ],
             [
-                'send_data' => $this->data + ['rating' => Video::RATING_LIST[1], 'categories_id' => [$category->id], 'genres_id' => [$genre->id]],
-                'test_data' => $this->data + ['rating' => Video::RATING_LIST[1]],
-            ]
+                'send_data' => $this->data + [
+                    'rating' => Video::RATING_LIST[1],
+                ],
+                'test_data' => $testData + ['rating' => Video::RATING_LIST[1]]
+            ],
         ];
 
         foreach ($data as $key => $value) {
@@ -189,24 +254,32 @@ class VideoCrudTest extends BaseVideoControllerTestCase
                 $value['test_data'] + ['deleted_at' => null]
             );
 
-            $response->assertJsonStructure(
-                [
-                    'created_at',
-                    'updated_at'
-                ]
+            $response->assertJsonStructure([
+                'data' => $this->fieldsSerialized
+            ]);
+
+            $this->assertResource(
+                $response,
+                new VideoResource(Video::find($response->json('data.id')))
             );
+
+            // $this->assertIfFilesUrlExists($this->video, $response);
 
             $response = $this->assertUpdate(
                 $value['send_data'],
                 $value['test_data'] + ['deleted_at' => null]
             );
 
-            $response->assertJsonStructure(
-                [
-                    'created_at',
-                    'updated_at'
-                ]
+            $response->assertJsonStructure([
+                'data' => $this->fieldsSerialized
+            ]);
+
+            $this->assertResource(
+                $response,
+                new VideoResource(Video::find($response->json('data.id')))
             );
+
+            // $this->assertIfFilesUrlExists($this->video, $response);
         }
     }
 
@@ -217,6 +290,7 @@ class VideoCrudTest extends BaseVideoControllerTestCase
         $response->assertStatus(204);
 
         $this->assertNull(Video::find($this->video->id));
+
         $this->assertNotNull(Video::withTrashed()->find($this->video->id));
     }
 
