@@ -28,6 +28,8 @@ class Video extends Model
 
     public static $fileFields = ['video_file', 'thumb_file', 'banner_file', 'trailer_file'];
 
+    protected $hidden = ['thumb_file', 'banner_file', 'trailer_file', 'video_file'];
+
     protected $fillable = [
         'name',
         'title',

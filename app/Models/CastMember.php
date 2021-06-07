@@ -27,5 +27,10 @@ class CastMember extends Model
     //     // 'type' => 0,
     // ];
 
+    protected $casts = [
+        'id' => 'string',
+        'type' => 'integer'
+    ];
+
     protected $keyType = 'string';
 }
