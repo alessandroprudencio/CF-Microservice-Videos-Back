@@ -16,6 +16,7 @@ services:
             - .:/var/www
         networks:
             - app-network
+            - rabbitmq_micro-catalog
         depends_on:
             - db
             - redis
@@ -43,7 +44,7 @@ services:
             - "33006:3306"
         volumes:
             - ./.docker/dbdata:/var/lib/mysql
-            - ./.docker/mysql:/docker-entrypoint-initdb.d   
+            - ./.docker/mysql:/docker-entrypoint-initdb.d
         environment:
             - MYSQL_ROOT_PASSWORD=root
         networks:
@@ -60,3 +61,5 @@ services:
 networks:
     app-network:
         driver: bridge
+    rabbitmq_micro-catalog:
+      external: true

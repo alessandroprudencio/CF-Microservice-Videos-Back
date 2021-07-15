@@ -11,7 +11,7 @@ RUN apk add --no-cache shadow \
         libjpeg-turbo-dev \
         libpng-dev
 
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install pdo pdo_mysql bcmath sockets
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 
